@@ -1,0 +1,27 @@
+{
+  "name": "todo-vue-and-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/PrgPaslen/todo-vue-and-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/PrgPaslen/todo-vue-and-nodejs/issues"
+  },
+  "homepage": "https://gitlab.com/PrgPaslen/todo-vue-and-nodejs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
