@@ -8,22 +8,53 @@ new Vue({
       todos: [],
     };
   },
+  created() {
+    fetch("/api/tasks", { method: "get" })
+      .then(res => res.json())
+      .then(data => {
+        this.todos = [...data];
+      })
+      .catch(e => console.log(e));
+  },
   methods: {
     addTodo() {
       const title = this.todoTitle.trim();
       if (!title) {
         return;
       }
-      this.todos.push({
-        title: title,
-        id: Math.random(),
-        done: false,
-        date: new Date(),
-      });
+      fetch("/api/tasks", {
+        method: "post",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          this.todos.push(data);
+        })
+        .catch(e => console.log(e));
       this.todoTitle = "";
     },
+    completeTask(id) {
+      fetch(`/api/tasks/${id}`, {
+        method: "put",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ done: true }),
+      });
+    },
     removeTodo(id) {
-      this.todos = this.todos.filter(t => t.id !== id);
+      fetch(`/api/tasks/${id}`, {
+        method: "delete",
+      })
+        .then(() => {
+          this.todos = this.todos.filter(t => t._id !== id);
+        })
+        .catch(e => console.log(e));
     },
   },
   filters: {
