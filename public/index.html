@@ -65,7 +65,7 @@
                 <div v-for="(todo, i) in todos" :key="i">
                   <v-list-tile avatar>
                     <v-list-tile-action>
-                      <v-checkbox v-if="!todo.done" v-model="todo.done" @change="completeTask(todo._id)" :dark="isDark">
+                      <v-checkbox v-if="!todo.done" v-model="todo.done" @change="completeTask(todo.id)" :dark="isDark">
                       </v-checkbox>
                     </v-list-tile-action>
                     <v-list-tile-content>
@@ -76,7 +76,7 @@
                         Добавлено в: {{todo.date | date}}
                       </v-list-tile-sub-title>
                     </v-list-tile-content>
-                    <v-btn icon ripple color="red" @click="removeTodo(todo._id)">
+                    <v-btn icon ripple color="red" @click="removeTodo(todo.id)">
                       <v-icon class="white--text">close</v-icon>
                     </v-btn>
                   </v-list-tile>

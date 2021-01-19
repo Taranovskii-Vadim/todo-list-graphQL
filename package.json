@@ -20,6 +20,8 @@
   "homepage": "https://gitlab.com/PrgPaslen/todo-vue-and-nodejs#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.4.0",
     "mongoose": "^5.11.12"
   },
   "devDependencies": {

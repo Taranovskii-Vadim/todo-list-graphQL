@@ -9,10 +9,24 @@ new Vue({
     };
   },
   created() {
-    fetch("/api/tasks", { method: "get" })
+    const query = `
+    query{
+      getTasks{
+        id title done date
+        }
+      }
+    `;
+    fetch("/graphql", {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query }),
+    })
       .then(res => res.json())
-      .then(data => {
-        this.todos = [...data];
+      .then(response => {
+        this.todos = response.data.getTasks;
       })
       .catch(e => console.log(e));
   },
@@ -22,39 +36,59 @@ new Vue({
       if (!title) {
         return;
       }
-      fetch("/api/tasks", {
+      const query = `mutation {
+        addTask(title: "${title}") {
+          id
+          title
+          date
+          done
+        }
+      }
+      `;
+      fetch("/graphql", {
         method: "post",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ query }),
       })
-        .then(response => response.json())
-        .then(data => {
-          this.todos.push(data);
-        })
-        .catch(e => console.log(e));
+        .then(res => res.json())
+        .then(response => {
+          this.todos.push(response.data.addTask);
+        });
       this.todoTitle = "";
     },
     completeTask(id) {
-      fetch(`/api/tasks/${id}`, {
-        method: "put",
+      const query = `
+      mutation {
+        finishTask(id: "${id}", done: true)
+      }
+      `;
+      fetch("/graphql", {
+        method: "post",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ done: true }),
+        body: JSON.stringify({ query }),
       });
     },
     removeTodo(id) {
-      fetch(`/api/tasks/${id}`, {
-        method: "delete",
-      })
-        .then(() => {
-          this.todos = this.todos.filter(t => t._id !== id);
-        })
-        .catch(e => console.log(e));
+      const query = `
+      mutation {
+        removeTask(id: "${id}")
+      }`;
+      fetch("/graphql", {
+        method: "post",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      }).then(() => {
+        this.todos = this.todos.filter(t => t.id !== id);
+      });
     },
   },
   filters: {
@@ -66,7 +100,7 @@ new Vue({
         year: "numeric",
         month: "long",
         day: "2-digit",
-      }).format(new Date(value));
+      }).format(new Date(+value));
     },
   },
 });

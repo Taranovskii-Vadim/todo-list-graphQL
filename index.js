@@ -1,9 +1,10 @@
 const express = require("express");
+const { graphqlHTTP } = require("express-graphql");
 const mongoose = require("mongoose");
 const path = require("path");
 
-// Routes
-const tasksRoutes = require("./routes/tasks");
+const schema = require("./graphql/schema");
+const resolver = require("./graphql/resolver");
 
 const app = express();
 
@@ -16,7 +17,13 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 
-app.use("/api/tasks", tasksRoutes);
+app.use(
+  graphqlHTTP({
+    schema,
+    rootValue: resolver,
+    graphiql: true,
+  })
+);
 
 app.use((req, res, next) => {
   res.sendFile("/index.html");
